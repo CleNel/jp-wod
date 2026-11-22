@@ -1,0 +1,142 @@
+# JP WOD word list. Format: written|reading|meaning|part of speech
+# Blank lines and lines starting with # are skipped.
+# Parts of speech: verb, noun, i-adjective, na-adjective
+#
+# HOW TO EXPAND: add a new section at the very END of this file (for example
+# "BEGINNER LIST 2" or "INTERMEDIATE"). Never reorder, delete, or insert words
+# above it: the store appends new words to the end of its saved order, and the
+# test in test/words.test.js fails if the beginner list below is changed in
+# place. Fixing a reading or meaning on an existing line is fine.
+
+################################################################
+# BEGINNER LIST (v1): 117 words
+################################################################
+
+# --- Verbs ---
+食べる|たべる|to eat|verb
+飲む|のむ|to drink|verb
+見る|みる|to see, to look at, to watch|verb
+聞く|きく|to listen, to hear, to ask|verb
+話す|はなす|to speak, to talk|verb
+読む|よむ|to read|verb
+書く|かく|to write|verb
+行く|いく|to go|verb
+来る|くる|to come|verb
+帰る|かえる|to return, to go home|verb
+買う|かう|to buy|verb
+会う|あう|to meet|verb
+待つ|まつ|to wait|verb
+立つ|たつ|to stand up|verb
+座る|すわる|to sit down|verb
+歩く|あるく|to walk|verb
+走る|はしる|to run|verb
+泳ぐ|およぐ|to swim|verb
+遊ぶ|あそぶ|to play, to have fun|verb
+働く|はたらく|to work|verb
+休む|やすむ|to rest, to take a day off|verb
+寝る|ねる|to sleep, to go to bed|verb
+起きる|おきる|to wake up, to get up|verb
+使う|つかう|to use|verb
+作る|つくる|to make, to create|verb
+開ける|あける|to open (something)|verb
+閉める|しめる|to close (something)|verb
+教える|おしえる|to teach, to tell|verb
+習う|ならう|to learn (from someone)|verb
+覚える|おぼえる|to remember, to memorize|verb
+忘れる|わすれる|to forget|verb
+持つ|もつ|to hold, to have, to carry|verb
+思う|おもう|to think, to feel|verb
+知る|しる|to know, to get to know|verb
+分かる|わかる|to understand|verb
+始める|はじめる|to begin, to start (something)|verb
+終わる|おわる|to end, to finish|verb
+住む|すむ|to live (in a place)|verb
+乗る|のる|to ride, to get on|verb
+降りる|おりる|to get off, to descend|verb
+洗う|あらう|to wash|verb
+着る|きる|to wear (on the upper body)|verb
+
+# --- Nouns ---
+水|みず|water|noun
+本|ほん|book|noun
+友達|ともだち|friend|noun
+先生|せんせい|teacher|noun
+学生|がくせい|student|noun
+学校|がっこう|school|noun
+会社|かいしゃ|company, office|noun
+家|いえ|house, home|noun
+駅|えき|train station|noun
+電車|でんしゃ|train|noun
+車|くるま|car|noun
+天気|てんき|weather|noun
+雨|あめ|rain|noun
+雪|ゆき|snow|noun
+空|そら|sky|noun
+山|やま|mountain|noun
+川|かわ|river|noun
+海|うみ|sea, ocean|noun
+花|はな|flower|noun
+犬|いぬ|dog|noun
+猫|ねこ|cat|noun
+魚|さかな|fish|noun
+肉|にく|meat|noun
+野菜|やさい|vegetables|noun
+果物|くだもの|fruit|noun
+朝|あさ|morning|noun
+夜|よる|night, evening|noun
+今日|きょう|today|noun
+明日|あした|tomorrow|noun
+昨日|きのう|yesterday|noun
+時間|じかん|time, hours|noun
+仕事|しごと|work, job|noun
+言葉|ことば|word, language|noun
+名前|なまえ|name|noun
+手|て|hand|noun
+目|め|eye|noun
+音楽|おんがく|music|noun
+映画|えいが|movie|noun
+財布|さいふ|wallet|noun
+部屋|へや|room|noun
+質問|しつもん|question|noun
+旅行|りょこう|trip, travel|noun
+
+# --- i-adjectives ---
+大きい|おおきい|big, large|i-adjective
+小さい|ちいさい|small, little|i-adjective
+新しい|あたらしい|new|i-adjective
+古い|ふるい|old (not for people)|i-adjective
+高い|たかい|high, tall, expensive|i-adjective
+安い|やすい|cheap, inexpensive|i-adjective
+美味しい|おいしい|delicious, tasty|i-adjective
+楽しい|たのしい|fun, enjoyable|i-adjective
+難しい|むずかしい|difficult|i-adjective
+優しい|やさしい|kind, gentle|i-adjective
+忙しい|いそがしい|busy|i-adjective
+暑い|あつい|hot (weather)|i-adjective
+寒い|さむい|cold (weather)|i-adjective
+早い|はやい|early, fast|i-adjective
+長い|ながい|long|i-adjective
+面白い|おもしろい|interesting, funny|i-adjective
+悲しい|かなしい|sad|i-adjective
+嬉しい|うれしい|happy, glad|i-adjective
+重い|おもい|heavy|i-adjective
+
+# --- na-adjectives ---
+好き|すき|liked, favorite|na-adjective
+嫌い|きらい|disliked, hated|na-adjective
+元気|げんき|healthy, energetic, well|na-adjective
+静か|しずか|quiet, calm|na-adjective
+有名|ゆうめい|famous|na-adjective
+便利|べんり|convenient, useful|na-adjective
+簡単|かんたん|simple, easy|na-adjective
+大切|たいせつ|important, precious|na-adjective
+上手|じょうず|skilled, good at|na-adjective
+下手|へた|unskilled, poor at|na-adjective
+綺麗|きれい|pretty, clean|na-adjective
+親切|しんせつ|kind, helpful|na-adjective
+大丈夫|だいじょうぶ|all right, okay|na-adjective
+暇|ひま|free (time), not busy|na-adjective
+
+################################################################
+# END OF BEGINNER LIST (v1). Add new sections below this line.
+################################################################
