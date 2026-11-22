@@ -9,7 +9,7 @@ A Windows desktop app (Electron, vanilla HTML/CSS/JS renderer) that shows a Japa
 - Any day can be checked off or un-checked, from the list or from the detail view.
 - The model never picks the word. Words come from `data/words.txt` (`written|reading|meaning|part of speech`, `#` comments and blank lines skipped). Ollama only writes an example sentence, its hiragana reading, an English translation, and a one-line usage note.
 - Nothing depends on a scheduled time. The PC is often off for a day or more, so the app works out what it needs on launch, on wake from sleep, and on a timer.
-- If Ollama is off or the model is missing, the app still shows the word, reading, and meaning. Sentences fill in later.
+- If Ollama is off or the model is missing, the app still shows the word, reading, and meaning. Sentences fill in later (see loading state below).
 
 ## Technical decisions and gotchas
 
@@ -19,7 +19,9 @@ A Windows desktop app (Electron, vanilla HTML/CSS/JS renderer) that shows a Japa
 - **Ollama host is `http://127.0.0.1:11434`, not `localhost`.** On Windows, `localhost` can resolve to IPv6 first and Ollama listens on IPv4.
 - **Use `/api/chat` with `stream: false` and a JSON schema in `format`.** Validate: all four fields are non-empty strings and the sentence contains the word. Match conjugated forms by dropping the trailing kana of verbs and i-adjectives (食べる matches 食べます). Retry once, then give up quietly.
 - **Generation timeout about 3 minutes.** The first request after launch can be slow while the model loads.
-- **Generation priority:** today, then missed days (newest first), then the next 7 days. Run on startup, on wake (wait about 5 seconds for the network), and every 10 minutes while content is missing.
+- **Generation priority:** today, then missed days (newest first, in the background after today finishes). Sentences are generated on the day, never ahead (`pendingContentDates(today, 0)`), so review words are as fresh as possible. Run on startup, on wake (wait about 5 seconds for the network), and every 10 minutes while content is missing.
+- **Loading state:** while a day's sentence is generating, the detail view shows the word, reading, and meaning large with an indeterminate spinner (the request is non-streaming, so there is no real progress). It fills in without a page change. On failure it falls back to the placeholder and banner, with Regenerate available.
+- **Review words:** the prompt may include 3 to 5 candidate words the user has **checked off** on earlier days (never merely assigned or missed ones). Picked deterministically from the date. Soft requirement: the sentence is valid if it contains the day's word. The schema has an optional `reviewWordsUsed`, each verified against the sentence with the same conjugation matching; `content` gains an optional `review` array.
 - **Electron security:** `contextIsolation: true`, `nodeIntegration: false`, `sandbox: true`, a preload exposing a small `window.api`, and a strict CSP with no inline styles or scripts. Render model output with `textContent`, never `innerHTML`.
 - **Atomic saves:** write `state.json.tmp`, then rename.
 - **Tray behavior:** closing the window hides it. Use `requestSingleInstanceLock`. Only register launch-at-login when `app.isPackaged`, otherwise dev runs register `electron.exe`.
