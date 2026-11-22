@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Yu Gothic UI", sans-serif;
+  background: #f6f4ef;
+  color: #222;
+}
+
+main {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2.5rem;
+}
