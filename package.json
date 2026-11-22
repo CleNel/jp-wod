@@ -1,0 +1,15 @@
+{
+  "name": "jp-wod",
+  "version": "0.1.0",
+  "description": "Japanese word of the day with example sentences from a local Ollama model.",
+  "main": "main.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.js"
+  },
+  "devDependencies": {
+    "electron": "^45.4.1"
+  }
+}
