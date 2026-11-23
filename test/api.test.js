@@ -159,3 +159,31 @@ test('setSettings applies none of a patch if any part is invalid', () => {
   assert.throws(() => api.setSettings({ model: 'gemma3:4b', host: 'nope' }));
   assert.deepEqual(store.getSettings(), before);
 });
+
+test('day knows whether it is today, missed, or done', () => {
+  const { api } = setup();
+  api.overview();
+  api.setDone('2026-05-08', true);
+
+  const today = api.day('2026-05-10');
+  assert.equal(today.isToday, true);
+  assert.equal(today.missed, false);
+
+  const missed = api.day('2026-05-09');
+  assert.equal(missed.isToday, false);
+  assert.equal(missed.missed, true);
+
+  const done = api.day('2026-05-08');
+  assert.equal(done.isToday, false);
+  assert.equal(done.missed, false);
+  assert.equal(done.done, true);
+});
+
+test('day and overview agree on isToday and missed for every day', () => {
+  const { api } = setup();
+  for (const item of api.overview()) {
+    const day = api.day(item.date);
+    assert.equal(day.isToday, item.isToday, item.date);
+    assert.equal(day.missed, item.missed, item.date);
+  }
+});
