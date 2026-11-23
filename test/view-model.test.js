@@ -153,3 +153,19 @@ test('pickSelection keeps a valid choice, else falls back to today, else the fir
   assert.equal(vm.pickSelection([day({ date: '2026-05-09' })], null), '2026-05-09');
   assert.equal(vm.pickSelection([], '2026-05-09'), null);
 });
+
+test('pickSelection: a window left on the old today jumps to the new today after midnight', () => {
+  const days = [
+    day({ date: '2026-05-11', isToday: true }),
+    day({ date: '2026-05-10', missed: true }), // was today yesterday
+    day({ date: '2026-05-09', missed: true }),
+  ];
+  // The user was looking at yesterday's "today": follow the new today.
+  assert.equal(vm.pickSelection(days, '2026-05-10', '2026-05-10'), '2026-05-11');
+  // The user deliberately picked an older day: keep it.
+  assert.equal(vm.pickSelection(days, '2026-05-09', '2026-05-10'), '2026-05-09');
+  // Nothing changed: keep the choice.
+  assert.equal(vm.pickSelection(days, '2026-05-11', '2026-05-11'), '2026-05-11');
+  // No previous today known: keep the choice.
+  assert.equal(vm.pickSelection(days, '2026-05-10', null), '2026-05-10');
+});

@@ -13,6 +13,7 @@
     settings: { model: '' },
     tab: 'all',
     selected: null,
+    todayDate: null,
     detail: null,
     loaded: false,
   };
@@ -198,7 +199,9 @@
         state.days = days;
         state.status = status;
         state.settings = settings;
-        state.selected = vm.pickSelection(days, state.selected);
+        state.selected = vm.pickSelection(days, state.selected, state.todayDate);
+        const today = days.find((d) => d.isToday);
+        if (today) state.todayDate = today.date;
         state.detail = state.selected ? await api.day(state.selected) : null;
         state.loaded = true;
         render();
