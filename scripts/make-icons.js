@@ -1,13 +1,18 @@
-// Generates assets/tray.png: a vermilion disc with the character 日, drawn
-// pixel by pixel and encoded as a PNG with Node's zlib (no image libraries).
+// Generates the app icons: a vermilion disc with the character 日, drawn pixel
+// by pixel and encoded with Node's zlib (no image libraries).
 //
 //   node scripts/make-icons.js
 //
-// The output is committed. Stage 8 reuses drawIcon() for the installer icon.
+// Writes assets/tray.png (32x32, the tray icon) and build/icon.ico (16 to 256,
+// the exe and installer icon). The outputs are committed.
 
 const fs = require('node:fs');
 const path = require('node:path');
 const zlib = require('node:zlib');
+
+// Sizes Windows picks from: small UI, taskbar, Explorer views, and the 256 that
+// electron-builder requires.
+const ICO_SIZES = [16, 24, 32, 48, 64, 128, 256];
 
 const RED = [184, 58, 38];
 const WHITE = [255, 255, 255];
@@ -72,11 +77,41 @@ function encodePng(size, rgba) {
   ]);
 }
 
-if (require.main === module) {
-  const dir = path.join(__dirname, '..', 'assets');
-  fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'tray.png'), encodePng(32, drawIcon(32)));
-  console.log('wrote assets/tray.png');
+// ICO container with PNG-compressed images (supported since Windows Vista).
+// images: [{ size, png }]
+function encodeIco(images) {
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0); // reserved
+  header.writeUInt16LE(1, 2); // type: icon
+  header.writeUInt16LE(images.length, 4);
+
+  const entries = Buffer.alloc(16 * images.length);
+  let offset = 6 + entries.length;
+  images.forEach(({ size, png }, i) => {
+    const at = i * 16;
+    entries[at] = size >= 256 ? 0 : size; // 0 means 256
+    entries[at + 1] = size >= 256 ? 0 : size;
+    entries.writeUInt16LE(1, at + 4); // colour planes
+    entries.writeUInt16LE(32, at + 6); // bits per pixel
+    entries.writeUInt32LE(png.length, at + 8);
+    entries.writeUInt32LE(offset, at + 12);
+    offset += png.length;
+  });
+
+  return Buffer.concat([header, entries, ...images.map((i) => i.png)]);
 }
 
-module.exports = { drawIcon, encodePng };
+if (require.main === module) {
+  const root = path.join(__dirname, '..');
+  fs.mkdirSync(path.join(root, 'assets'), { recursive: true });
+  fs.mkdirSync(path.join(root, 'build'), { recursive: true });
+
+  fs.writeFileSync(path.join(root, 'assets', 'tray.png'), encodePng(32, drawIcon(32)));
+  console.log('wrote assets/tray.png');
+
+  const images = ICO_SIZES.map((size) => ({ size, png: encodePng(size, drawIcon(size)) }));
+  fs.writeFileSync(path.join(root, 'build', 'icon.ico'), encodeIco(images));
+  console.log(`wrote build/icon.ico (${ICO_SIZES.join(', ')})`);
+}
+
+module.exports = { drawIcon, encodePng, encodeIco, ICO_SIZES };
