@@ -115,10 +115,15 @@
   }
 
   // Keep the current choice if it still exists; else today; else the first day.
-  function pickSelection(days, current) {
+  // After midnight, a user still looking at yesterday's "today" (previousToday)
+  // follows to the new today; a deliberately chosen older day is kept.
+  function pickSelection(days, current, previousToday) {
     if (days.length === 0) return null;
-    if (current && days.some((d) => d.date === current)) return current;
     const today = days.find((d) => d.isToday);
+    if (current && previousToday && current === previousToday && today && today.date !== previousToday) {
+      return today.date;
+    }
+    if (current && days.some((d) => d.date === current)) return current;
     return (today || days[0]).date;
   }
 
