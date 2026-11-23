@@ -7,6 +7,11 @@
 # above it: the store appends new words to the end of its saved order, and the
 # test in test/words.test.js fails if the beginner list below is changed in
 # place. Fixing a reading or meaning on an existing line is fine.
+#
+# IRREGULAR WORDS: after adding words, run `npm test`. If a new word is irregular
+# or ambiguous (a verb ending in る, a na-adjective ending in い, 行く, ...) or its
+# reading differs from the dictionary's, the test fails and says which line to add
+# to data/exceptions.txt. Do not guess a verb group: check a dictionary.
 
 ################################################################
 # BEGINNER LIST (v1): 117 words

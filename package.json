@@ -11,5 +11,8 @@
   },
   "devDependencies": {
     "electron": "^45.4.1"
+  },
+  "dependencies": {
+    "kuromoji": "^0.1.2"
   }
 }

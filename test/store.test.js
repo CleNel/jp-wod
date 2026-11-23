@@ -44,6 +44,7 @@ test('a fresh store has default settings and nothing on disk until saved', () =>
   const store = open(file);
   assert.deepEqual(store.getSettings(), DEFAULT_SETTINGS);
   assert.equal(DEFAULT_SETTINGS.host, 'http://127.0.0.1:11434');
+  assert.equal(DEFAULT_SETTINGS.model, 'gemma3:12b');
   assert.equal(typeof DEFAULT_SETTINGS.model, 'string');
   assert.equal(typeof DEFAULT_SETTINGS.launchAtLogin, 'boolean');
   assert.equal(fs.existsSync(file), false);
@@ -312,4 +313,75 @@ test('creates the data directory if it does not exist', () => {
   const store = open(file);
   store.ensureEntries('2026-05-04', 0);
   assert.equal(fs.existsSync(file), true);
+});
+
+// ---------- review candidates ----------
+
+test('reviewCandidates only returns words checked off on earlier days', () => {
+  const store = open(tmpFile());
+  store.ensureEntries('2026-05-01', 0);
+  store.ensureEntries('2026-05-06', 0);
+  store.setDone('2026-05-01', true);
+  store.setDone('2026-05-03', true);
+  // 05-02, 05-04, 05-05 are missed, not done: never offered.
+  const picked = store.reviewCandidates('2026-05-06', 10).map((w) => w.written).sort();
+  const expected = ['2026-05-01', '2026-05-03'].map((d) => store.getState().entries[d].key).sort();
+  assert.deepEqual(picked, expected);
+});
+
+test('reviewCandidates ignores the same day and later days, even if done', () => {
+  const store = open(tmpFile());
+  store.ensureEntries('2026-05-01', 3);
+  store.setDone('2026-05-03', true); // the day itself
+  store.setDone('2026-05-04', true); // a later day
+  assert.deepEqual(store.reviewCandidates('2026-05-03', 5), []);
+});
+
+test('reviewCandidates is empty when nothing is checked off', () => {
+  const store = open(tmpFile());
+  store.ensureEntries('2026-05-05', 0);
+  assert.deepEqual(store.reviewCandidates('2026-05-05', 5), []);
+});
+
+test('reviewCandidates caps at n and is deterministic for a date', () => {
+  const store = open(tmpFile(), makeWords(30));
+  store.ensureEntries('2026-05-01', 0);
+  store.ensureEntries('2026-05-12', 0);
+  for (let d = 1; d <= 10; d++) store.setDone(`2026-05-${String(d).padStart(2, '0')}`, true);
+
+  const a = store.reviewCandidates('2026-05-12', 4).map((w) => w.written);
+  const b = store.reviewCandidates('2026-05-12', 4).map((w) => w.written);
+  assert.equal(a.length, 4);
+  assert.deepEqual(a, b);
+  assert.equal(new Set(a).size, 4);
+  // a different day picks a different mix (not guaranteed in theory, true for this seed)
+  const c = store.reviewCandidates('2026-05-11', 4).map((w) => w.written);
+  assert.notDeepEqual(a, c);
+});
+
+test("reviewCandidates never includes the day's own word, or words missing from the list", () => {
+  // 3-word list, so the word repeats every 3 days.
+  const file = tmpFile();
+  const store = open(file, makeWords(3));
+  store.ensureEntries('2026-05-01', 0);
+  store.ensureEntries('2026-05-04', 0);
+  for (const d of ['2026-05-01', '2026-05-02', '2026-05-03']) store.setDone(d, true);
+  const todayKey = store.getState().entries['2026-05-04'].key; // same word as 05-01
+  const picked = store.reviewCandidates('2026-05-04', 5).map((w) => w.written);
+  assert.equal(picked.includes(todayKey), false);
+  assert.equal(picked.length, 2);
+
+  // a learned word removed from words.txt is skipped
+  const removed = store.getState().entries['2026-05-02'].key;
+  const shrunk = open(file, makeWords(3).filter((w) => w.written !== removed));
+  const after = shrunk.reviewCandidates('2026-05-04', 5).map((w) => w.written);
+  assert.equal(after.includes(removed), false);
+});
+
+test('reviewCandidates offers exactly one word by default', () => {
+  const store = open(tmpFile(), makeWords(30));
+  store.ensureEntries('2026-05-01', 0);
+  store.ensureEntries('2026-05-12', 0);
+  for (let d = 1; d <= 10; d++) store.setDone(`2026-05-${String(d).padStart(2, '0')}`, true);
+  assert.equal(store.reviewCandidates('2026-05-12').length, 1);
 });

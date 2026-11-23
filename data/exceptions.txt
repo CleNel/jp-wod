@@ -1,0 +1,55 @@
+# Irregular and exception words. Format: written|category|note
+# Blank lines and lines starting with # are skipped.
+#
+# WHY THIS FILE EXISTS: some words behave differently from what their spelling
+# suggests. test/exceptions.test.js checks data/words.txt against the rules in
+# lib/exceptions.js and FAILS when a word needs a line here and has none, so
+# adding words to words.txt cannot silently introduce an exception. The test
+# message says what to check. This file is also the source of truth for verb
+# groups when conjugation is computed in code.
+#
+# WHEN YOU ADD WORDS to data/words.txt:
+#   1. Run: npm test
+#   2. For each problem it prints, look up how the word really behaves, then add
+#      a line below (the category list is in lib/exceptions.js).
+#   3. Verbs ending in る always need a group: ichidan or godan (or
+#      irregular-verb for 来る and する). Verbs NOT ending in る are regular godan
+#      and need no line. If unsure, check a dictionary: do not guess.
+#   4. If a word shows up as "reading-differs", the dictionary used for sentence
+#      readings picks a different reading than words.txt. Decide which is right.
+#
+# Categories: ichidan, godan, irregular-verb, special-te-form, honorific-verb,
+#   na-adj-ends-in-i, irregular-i-adjective, attributive-na-form, reading-differs
+
+# --- Verbs ending in る (group must be recorded) ---
+食べる|ichidan|食べます, 食べない, 食べた
+見る|ichidan|見ます, 見ない, 見た
+寝る|ichidan|寝ます, 寝ない, 寝た
+起きる|ichidan|起きます, 起きない, 起きた
+開ける|ichidan|開けます, 開けない, 開けた
+閉める|ichidan|閉めます, 閉めない, 閉めた
+教える|ichidan|教えます, 教えない, 教えた
+覚える|ichidan|覚えます, 覚えない, 覚えた
+忘れる|ichidan|忘れます, 忘れない, 忘れた
+始める|ichidan|始めます, 始めない, 始めた
+降りる|ichidan|stem 降り: 降ります, 降りない, 降りた
+着る|ichidan|着ます, 着ない, 着た
+帰る|godan|looks ichidan but is godan: 帰ります, 帰らない, 帰った
+作る|godan|作ります, 作らない, 作った
+知る|godan|知ります, 知らない, 知った
+終わる|godan|終わります, 終わらない, 終わった
+乗る|godan|乗ります, 乗らない, 乗った
+走る|godan|looks ichidan but is godan: 走ります, 走らない, 走った
+座る|godan|座ります, 座らない, 座った
+分かる|godan|分かります, 分からない, 分かった
+来る|irregular-verb|reading changes: きます, こない, きた, きて; dictionary form くる
+
+# --- Other verbs ---
+行く|special-te-form|いって and いった (not いいて); いきます, いかない otherwise regular
+
+# --- Adjectives ---
+綺麗|na-adj-ends-in-i|reading ends in い but it is a na-adjective: きれいな, きれいです, きれいじゃない
+有名|na-adj-ends-in-i|reading ゆうめい ends in い but it is a na-adjective: 有名な, 有名です, 有名じゃない
+嫌い|na-adj-ends-in-i|ends in い but it is a na-adjective: きらいな, きらいです, きらいじゃない
+大きい|attributive-na-form|also 大きな before a noun (大きな犬); 大きい is the predicate form
+小さい|attributive-na-form|also 小さな before a noun (小さな花); 小さい is the predicate form
