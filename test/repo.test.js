@@ -107,3 +107,12 @@ test('README: is honest about the limits', () => {
   assert.match(readme, /wrong|mistake|check/i); // model output can be wrong
   assert.match(readme, /Windows/);
 });
+
+test('workflow: actions are on versions that run on Node 24, not the deprecated Node 20 (v5 or newer)', () => {
+  const wf = read('.github', 'workflows', 'test.yml');
+  const uses = [...wf.matchAll(/uses: (actions\/[a-z-]+)@v(\d+)/g)];
+  assert.ok(uses.length >= 2, 'expected checkout and setup-node');
+  for (const [, action, major] of uses) {
+    assert.ok(Number(major) >= 5, `${action}@v${major} runs on the deprecated Node 20`);
+  }
+});
