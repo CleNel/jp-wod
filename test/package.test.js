@@ -54,7 +54,8 @@ test('build: only runtime files are packaged, and everything main.js needs is in
 
 test('build: output goes to dist (which is git-ignored)', () => {
   assert.equal(build.directories.output, 'dist');
-  assert.match(fs.readFileSync(path.join(root, '.gitignore'), 'utf8'), /^dist\/?$/m);
+  const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8').replace(/\r\n/g, '\n');
+  assert.match(gitignore, /^dist\/?$/m);
 });
 
 test('every relative require in main.js resolves inside the packaged folders', () => {
