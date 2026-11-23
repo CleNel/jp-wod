@@ -56,5 +56,8 @@
       "shortcutName": "JP WOD",
       "createDesktopShortcut": false
     }
+  },
+  "engines": {
+    "node": ">=22.2.0"
   }
 }

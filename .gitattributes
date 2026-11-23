@@ -1,0 +1,6 @@
+# Same line endings in every checkout (Windows, macOS, Linux, CI).
+* text=auto eol=lf
+
+# Never touch binary files.
+*.png binary
+*.ico binary
