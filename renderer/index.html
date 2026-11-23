@@ -11,10 +11,66 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main>
-      <h1>JP WOD</h1>
-      <p id="status">Loading…</p>
-    </main>
+    <div class="app">
+      <aside class="sidebar" aria-label="Days">
+        <header class="sidebar-head">
+          <h1 class="app-title">JP WOD</h1>
+          <p class="counts">
+            <span><strong id="learned-count">0</strong> learned</span>
+            <span><strong id="missed-count">0</strong> missed</span>
+          </p>
+          <div class="tabs" role="group" aria-label="Show days">
+            <button type="button" class="tab" id="tab-all" data-tab="all" aria-pressed="true">All</button>
+            <button type="button" class="tab" id="tab-missed" data-tab="missed" aria-pressed="false">Missed</button>
+          </div>
+        </header>
+
+        <ul id="day-list" class="day-list"></ul>
+        <p id="empty-list" class="empty" hidden>Nothing missed. Nice work.</p>
+
+        <footer class="sidebar-foot">
+          <label for="model-input" class="field-label">Model</label>
+          <input id="model-input" class="field" type="text" spellcheck="false" autocomplete="off" />
+          <p id="model-msg" class="hint" role="status"></p>
+        </footer>
+      </aside>
+
+      <main class="detail">
+        <div id="banner" class="banner" role="status" hidden></div>
+
+        <article id="detail" class="detail-body" hidden>
+          <p class="date-line">
+            <span id="d-date"></span>
+            <span id="d-badge" class="badge" hidden></span>
+          </p>
+          <h2 id="d-word" class="word" lang="ja"></h2>
+          <p id="d-reading" class="reading" lang="ja"></p>
+          <p class="meaning-line">
+            <span id="d-meaning" class="meaning"></span>
+            <span id="d-pos" class="pos"></span>
+          </p>
+
+          <div class="actions">
+            <button type="button" id="learned-btn" class="btn primary" aria-pressed="false"></button>
+            <button type="button" id="regen-btn" class="btn">Regenerate example</button>
+          </div>
+
+          <section id="example-card" class="card" aria-live="polite"></section>
+          <section id="grammar-card" class="card note" hidden>
+            <h3 class="card-title">Grammar</h3>
+            <p id="grammar-text" class="card-text"></p>
+          </section>
+          <section id="usage-card" class="card note" hidden>
+            <h3 class="card-title">Usage</h3>
+            <p id="usage-text" class="card-text"></p>
+          </section>
+        </article>
+
+        <p id="loading" class="loading-page">Loading…</p>
+      </main>
+    </div>
+
+    <script src="view-model.js"></script>
     <script src="renderer.js"></script>
   </body>
 </html>
